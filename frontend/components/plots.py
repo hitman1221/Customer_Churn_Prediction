@@ -15,13 +15,13 @@ def plot_monthly_charges_histogram(df):
         hover_data={'tenure': True, 'total_charges': True}
     )
     fig.update_layout(
-        xaxis_title="Monthly Charges ($)",
+        xaxis_title="Monthly Charges (₹)",
         yaxis_title="Number of Customers",
         title_font=dict(size=18, family="Segoe UI", color="#111111"),
         legend_title="Churn Status"
     )
     fig.update_traces(
-        hovertemplate="<b>Monthly Charges:</b> %{x:$,.2f}<br><b>Count:</b> %{y}<br><b>Tenure:</b> %{customdata[0]} months<br><b>Total Charges:</b> $%{customdata[1]:,.2f}<extra></extra>"
+        hovertemplate="<b>Monthly Charges:</b> ₹%{x:,.2f}<br><b>Count:</b> %{y}<br><b>Tenure:</b> %{customdata[0]} months<br><b>Total Charges:</b> ₹%{customdata[1]:,.2f}<extra></extra>"
     )
     return fig
 
@@ -40,14 +40,14 @@ def plot_tenure_vs_charges(df):
     )
     fig.update_layout(
         xaxis_title="Tenure (Months)",
-        yaxis_title="Monthly Charges ($)",
+        yaxis_title="Monthly Charges (₹)",
         title_font=dict(size=18, family="Segoe UI", color="#111111"),
         legend_title="Churn Status",
         hovermode="closest"
     )
     fig.update_traces(
         marker=dict(size=10, symbol="circle"),
-        hovertemplate="<b>Tenure:</b> %{x} months<br><b>Monthly Charges:</b> $%{y:.2f}<br><b>Gender:</b> %{customdata[0]}<br><b>Contract:</b> %{customdata[1]}<extra></extra>"
+        hovertemplate="<b>Tenure:</b> %{x} months<br><b>Monthly Charges:</b> ₹%{y:.2f}<br><b>Gender:</b> %{customdata[0]}<br><b>Contract:</b> %{customdata[1]}<extra></extra>"
     )
     return fig
 
@@ -214,7 +214,7 @@ def plot_paperlessbilling_vs_churn(df):
 def plot_totalcharges_boxplot(df):
     if 'total_charges' in df.columns:
         fig = px.box(df, x='churn', y='total_charges', title="Total Charges by Churn", template="plotly_white")
-        fig.update_layout(xaxis_title="Churn", yaxis_title="Total Charges ($)")
+        fig.update_layout(xaxis_title="Churn", yaxis_title="Total Charges (₹)")
         return fig
     else:
         return None
@@ -266,5 +266,5 @@ def plot_kmeans_clusters(df):
         title="KMeans Clusters of Customers",
         template="plotly_white"
     )
-    fig.update_layout(xaxis_title="Tenure (Months)", yaxis_title="Monthly Charges ($)")
+    fig.update_layout(xaxis_title="Tenure (Months)", yaxis_title="Monthly Charges (₹)")
     return fig

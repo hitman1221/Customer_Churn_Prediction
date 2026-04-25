@@ -16,7 +16,7 @@ def compute_insights(df):
     
     avg_charges = df.groupby('churn')['monthly_charges'].mean().reset_index()
     for _, row in avg_charges.iterrows():
-        insights.append(f"**Avg. Monthly Charge for churn = '{row['churn']}':** ${row['monthly_charges']:.2f}")
+        insights.append(f"**Avg. Monthly Charge for churn = '{row['churn']}':** ₹{row['monthly_charges']:.2f}")
     
     avg_tenure = df.groupby('churn')['tenure'].mean().reset_index()
     for _, row in avg_tenure.iterrows():
@@ -32,8 +32,8 @@ def insights_tab(df):
     avg_charge_churned = df[df['churn'].str.lower()=='yes']['monthly_charges'].mean()
     avg_charge_non_churned = df[df['churn'].str.lower()=='no']['monthly_charges'].mean()
     col1.metric("📉 Overall Churn Rate", f"{overall_churn:.2f}%")
-    col2.metric("💰 Avg. Charge (Churned)", f"${avg_charge_churned:.2f}")
-    col3.metric("💵 Avg. Charge (Non-Churned)", f"${avg_charge_non_churned:.2f}")
+    col2.metric("💰 Avg. Charge (Churned)", f"₹{avg_charge_churned:.2f}")
+    col3.metric("💵 Avg. Charge (Non-Churned)", f"₹{avg_charge_non_churned:.2f}")
     
     st.markdown("## Segment Analysis")
     seg_var = st.selectbox("Select a segmentation variable", ["contract", "internet_service", "gender", "payment_method"], key="segmentation_select")

@@ -9,7 +9,7 @@ def display_summary_metrics(df):
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("👥 Total Customers", total_customers)
     col2.metric("📉 Churn Rate (%)", f"{churn_rate:.2f}%")
-    col3.metric("💰 Avg. Monthly Charges", f"${avg_monthly_charges:.2f}")
+    col3.metric("💰 Avg. Monthly Charges", f"₹{avg_monthly_charges:.2f}")
     col4.metric("⏳ Avg. Tenure (months)", f"{avg_tenure:.1f}")
 
 def download_filtered_data(df):

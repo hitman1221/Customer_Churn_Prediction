@@ -73,7 +73,7 @@ def prediction_form():
             help="How many months this customer has been with the company."
         )
         monthly_charges = st.number_input(
-            "💰 Monthly Charges ($)",
+            "💰 Monthly Charges (₹)",
             min_value=0.0, value=70.0, format="%.2f",
             help="What the customer pays every month, on average."
         )
