@@ -1,9 +1,63 @@
 import streamlit as st
-import requests
 import os
+import pickle
+import pandas as pd
 
-# Try to read from the environment, defaulting to the Compose service name:
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+# Resolve model path relative to this file's location
+MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../backend/model.pkl"))
+
+@st.cache_resource
+def load_model():
+    try:
+        with open(MODEL_PATH, "rb") as f:
+            return pickle.load(f)
+    except Exception as e:
+        return None
+
+def make_feature_df(payload: dict) -> pd.DataFrame:
+    d = payload.copy()
+
+    d['total_charges'] = d['tenure'] * d['monthly_charges']
+    d['avg_charge_per_month'] = d['total_charges'] / (d['tenure'] + 1e-6)
+
+    t = d['tenure']
+    if t <= 12:
+        d['tenure_bucket'] = '0-12'
+    elif t <= 24:
+        d['tenure_bucket'] = '12-24'
+    elif t <= 48:
+        d['tenure_bucket'] = '24-48'
+    else:
+        d['tenure_bucket'] = '48+'
+
+    svc_map = {
+        "Multiple Lines":     "multiple_lines",
+        "Online Security":    "online_security",
+        "Online Backup":      "online_backup",
+        "Device Protection":  "device_protection",
+        "Tech Support":       "tech_support",
+        "Streaming TV":       "streaming_tv",
+        "Streaming Movies":   "streaming_movies",
+    }
+    for col in svc_map.values():
+        d[col] = "No"
+    
+    for svc in d.pop('services_list', []):
+        key = svc_map.get(svc)
+        if key:
+            d[key] = "Yes"
+
+    d['services_count'] = sum(1 for col in svc_map.values() if d[col] == "Yes")
+
+    cols = [
+        'tenure', 'monthly_charges', 'total_charges', 'avg_charge_per_month',
+        'services_count', 'contract', 'gender', 'senior_citizen', 'partner',
+        'dependents', 'internet_service', 'paperless_billing', 'payment_method',
+        'multiple_lines', 'online_security', 'online_backup',
+        'device_protection', 'tech_support', 'streaming_tv', 'streaming_movies',
+        'tenure_bucket'
+    ]
+    return pd.DataFrame([d], columns=cols)
 
 def prediction_form():
     st.header("🔮 Customer Churn Prediction")
@@ -105,14 +159,18 @@ def prediction_form():
                 "services_list": services_list
             }
             try:
-                response = requests.post(f"{API_URL}/predict", json=payload)
-                if response.status_code == 200:
-                    result = response.json()
-                    st.success(
-                        f"**Prediction:** {result['prediction']}  \n"
-                        f"**Churn Probability:** {result['probability']:.2%}"
-                    )
+                model = load_model()
+                if model is None:
+                    st.error("Prediction failed: Could not load the machine learning model. Make sure model.pkl exists in the backend directory.")
                 else:
-                    st.error(f"Prediction failed ({response.status_code}): {response.text}")
+                    df = make_feature_df(payload)
+                    proba = model.predict_proba(df)[0, 1]
+                    threshold = 0.5
+                    prediction = "Yes" if proba >= threshold else "No"
+                    
+                    st.success(
+                        f"**Prediction:** {prediction}  \n"
+                        f"**Churn Probability:** {proba:.2%}"
+                    )
             except Exception as e:
                 st.error(f"Error: {e}")
