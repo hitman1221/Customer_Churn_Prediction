@@ -2,7 +2,7 @@
 
 from typing import List
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, conint, confloat, constr
+from pydantic import BaseModel, Field, StrictStr
 import pickle
 import pandas as pd
 
@@ -18,20 +18,20 @@ except Exception as e:
 
 # --- Define Input Schema ---
 class CustomerInput(BaseModel):
-    tenure:        conint(ge=0)
-    monthly_charges: confloat(ge=0.0)
-    contract:      constr(strict=True)
-    gender:        constr(strict=True)
-    senior_citizen: conint(ge=0, le=1)
-    partner:       constr(strict=True)
-    dependents:    constr(strict=True)
+    tenure:        int = Field(ge=0)
+    monthly_charges: float = Field(ge=0.0)
+    contract:      StrictStr
+    gender:        StrictStr
+    senior_citizen: int = Field(ge=0, le=1)
+    partner:       StrictStr
+    dependents:    StrictStr
 
-    internet_service:  constr(strict=True)
-    paperless_billing: constr(strict=True)
-    payment_method:    constr(strict=True)
+    internet_service:  StrictStr
+    paperless_billing: StrictStr
+    payment_method:    StrictStr
 
     # ONE field instead of seven: a list of service names
-    services_list:    List[constr(strict=True)] = []
+    services_list:    List[StrictStr] = Field(default_factory=list)
 
 def make_feature_df(data: CustomerInput) -> pd.DataFrame:
     d = data.dict()
