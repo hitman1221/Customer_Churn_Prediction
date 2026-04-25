@@ -208,14 +208,6 @@ Sample response:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 📧 Contact
-
-For questions, feedback, or collaboration opportunities, please reach out:
-
-- Email: mahtabranjbar93@gmail.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/MahtabRanjbar)
-- GitHub: [Your GitHub Profile](https://github.com/MahtabRanjbar)
-
 ---
 
 ⭐ If you find this project useful, please consider giving it a star on GitHub!
