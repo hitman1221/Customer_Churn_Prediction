@@ -48,4 +48,8 @@ def load_data():
     # Convert data types
     df['senior_citizen'] = df['senior_citizen'].astype(int)
     
+    # Scale charges by 10 for UI display (algorithm will handle unscaled values)
+    df['monthly_charges'] = df['monthly_charges'] * 10
+    df['total_charges'] = df['total_charges'] * 10
+    
     return df

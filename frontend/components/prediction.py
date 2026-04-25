@@ -74,7 +74,7 @@ def prediction_form():
         )
         monthly_charges = st.number_input(
             "💰 Monthly Charges (₹)",
-            min_value=0.0, value=70.0, format="%.2f",
+            min_value=0.0, value=700.0, format="%.2f",
             help="What the customer pays every month, on average."
         )
 
@@ -147,7 +147,7 @@ def prediction_form():
         if submitted:
             payload = {
                 "tenure": tenure,
-                "monthly_charges": monthly_charges,
+                "monthly_charges": monthly_charges / 10.0,
                 "contract": contract,
                 "gender": gender,
                 "senior_citizen": senior_citizen,
